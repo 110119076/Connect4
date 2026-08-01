@@ -19,3 +19,4 @@ Note: It is possible to restart the WebSocket server automatically.
 
 The ConnectionClosedOK exception doesn’t appear anymore after properly handled in the server.
 
+Websockets provides a shortcut for iterating over messages received on the connection until the client disconnects instead of manually handling the ConnectionClosedOK exception.
