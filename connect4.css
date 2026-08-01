@@ -58,7 +58,7 @@ body {
 .board::after {
   background-color: blue;
   content: "";
-  height: 720px;
+  height: auto;
   width: 20px;
   position: absolute;
 }
