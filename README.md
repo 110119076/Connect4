@@ -20,3 +20,24 @@ Note: It is possible to restart the WebSocket server automatically.
 The ConnectionClosedOK exception doesn’t appear anymore after properly handled in the server.
 
 Websockets provides a shortcut for iterating over messages received on the connection until the client disconnects instead of manually handling the ConnectionClosedOK exception.
+
+Until now we connected from websocket client to server, we now connect from browser to the server.
+
+Before you exchange messages with the server, you need to decide their format. Let's use JSON.
+
+sendMoves() registers a listener for click events on the board. The listener figures out which column was clicked, builds a event of type "play", serializes it, and sends it to the server.
+
+Thus we successfully transmitted from browser to server
+
+Now let's transmit from server to browser back.
+
+In JavaScript, you receive WebSocket messages by listening to message events.
+
+You’re going to need three types of messages from the server to the browser:
+
+{type: "play", player: "red", column: 3, row: 0}
+
+{type: "win", player: "red"}
+
+{type: "error", message: "This slot is full."}
+
