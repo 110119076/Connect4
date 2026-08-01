@@ -41,3 +41,28 @@ You’re going to need three types of messages from the server to the browser:
 
 {type: "error", message: "This slot is full."}
 
+## Summary
+
+In this first part of the tutorial, you learned how to:
+
+build and run a WebSocket server in Python with serve();
+
+receive a message in a connection handler with recv();
+
+send a message in a connection handler with send();
+
+iterate over incoming messages with async for message in websocket: ...;
+
+open a WebSocket connection in JavaScript with the WebSocket API;
+
+send messages in a browser with WebSocket.send();
+
+receive messages in a browser by listening to message events;
+
+design a set of events to be exchanged between the browser and the server.
+
+You can now play a Connect Four game in a browser, communicating over a WebSocket connection with a server where the game logic resides!
+
+However, the two players share a browser, so the constraint of being in the same room still applies.
+
+Move on to the second part of the tutorial to break this constraint and play from separate browsers.
