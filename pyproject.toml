@@ -1,0 +1,1 @@
+[tool.pyrefly] python-interpreter-path = "venv/Scripts/python311.exe"
