@@ -90,3 +90,28 @@ Note: Keep track of the WebSocket connections of the two players.
 A module-level dict enables lookups by identifier: JOIN = {}
 
 When the first player starts the game, initialize and store it. When the second player joins the game, look it up and register to receive moves from the same game.
+
+In both connection handlers, you have a game pointing to the same Connect4 instance, so you can interact with the game, and a connected set of connections, so you can send game events to both players as follows:
+
+for connection in connected:
+
+        await connection.send(json.dumps(event))
+
+
+Perhaps you spotted a major piece missing from the puzzle. How does the second player obtain join_key? Let’s design new events to carry this information.
+
+To start a game, the first player sends an "init" event
+
+{type: "init"}
+
+The connection handler for the first player creates a game and responds with join key
+
+With this information, the user interface of the first player can create a link to http://localhost:8000/?join=<join_key>. 
+
+To join the game, the second player sends a different "init" event
+
+{type: "init", join: "<join_key>"}
+
+The connection handler for the second player can look up the game with the join key as shown above.
+
+Define a function to send an initialization event when the WebSocket connection is established, which triggers an open event

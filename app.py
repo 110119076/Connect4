@@ -56,7 +56,7 @@ JOIN = {}
 #             }
 #             await websocket.send(json.dumps(event))
 
-async def handler(websocket):
+async def start(websocket):
     game = Connect4()
     connected = {websocket}
 
@@ -64,10 +64,19 @@ async def handler(websocket):
     JOIN[join_key] = game, connected
 
     try:
+        event = {"type": "init", "join": join_key}
+        await websocket.send(json.dumps(event))
+        print("First player started game", id(game))
         async for message in websocket:
-            print(message)
+            print("First player sent", message)
     finally:
         del JOIN[join_key]
+
+async def handler(websocket):
+    async for message in websocket:
+        event = json.loads(message)
+        assert event["type"] == "init"
+        await start(websocket)
 
 async def main():
     server = await serve(handler, "", 8001) # Starts a websocket server

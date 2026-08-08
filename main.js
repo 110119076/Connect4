@@ -6,6 +6,7 @@ window.addEventListener("DOMContentLoaded", () => {
   createBoard(board);
   // Open the WebSocket connection and register event handlers.
   const websocket = new WebSocket("ws://localhost:8001/");
+  initGame(websocket);
   receiveMoves(board, websocket);
   sendMoves(board, websocket);
 });
@@ -50,4 +51,12 @@ function receiveMoves(board, websocket) {
         throw new Error(`Unsupported event type: ${event.type}.`);
     }
   });
+}
+
+function initGame(websocket) {
+  websocket.addEventListener("open", ()=>{
+    // send an init event for the first player
+    const event = {type: "init"};
+    websocket.send(JSON.stringify(event));
+  })
 }
