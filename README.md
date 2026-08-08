@@ -66,3 +66,27 @@ You can now play a Connect Four game in a browser, communicating over a WebSocke
 However, the two players share a browser, so the constraint of being in the same room still applies.
 
 Move on to the second part of the tutorial to break this constraint and play from separate browsers.
+
+### Route & Broadcast
+
+Open two WebSocket connections from two separate browsers, one for each player, to the same server in order to play the same game
+
+This requires moving the state of the game to a place where both connections can access it.
+
+As long as you’re running a single server process, you can share state by storing it in a global variable.
+
+For multi server process => Pub / Sub mechanism
+
+How can you make two connection handlers agree on which game they’re playing?
+
+When the first player starts a game, you give it an identifier.
+
+Then, you communicate the identifier to the second player.
+
+When the second player joins the game, you look it up with the identifier.
+
+Note: Keep track of the WebSocket connections of the two players.
+
+A module-level dict enables lookups by identifier: JOIN = {}
+
+When the first player starts the game, initialize and store it. When the second player joins the game, look it up and register to receive moves from the same game.
