@@ -60,7 +60,12 @@ function receiveMoves(board, websocket) {
 function initGame(websocket) {
   websocket.addEventListener("open", ()=>{
     // send an init event for the first player
-    const event = {type: "init"};
+    let event = {type: "init"};
+    const urlParams = new URLSearchParams(window.location.search);
+    const joinKey = urlParams.get("join");
+    if (joinKey) {
+      event.join = joinKey;
+    }
     websocket.send(JSON.stringify(event));
   })
 }

@@ -72,11 +72,35 @@ async def start(websocket):
     finally:
         del JOIN[join_key]
 
+async def error(websocket, message):
+    event = {
+        "type": "error",
+        "message": message,
+    }
+    await websocket.send(json.dumps(event))
+
+async def join(websocket, join_key):
+    try:
+        game, connected = JOIN[join_key]
+    except KeyError:
+        await error(websocket, "Game not found.")
+        return
+    connected.add(websocket)
+    try:
+        print("Second player joined game", id(game))
+        async for message in websocket:
+            print("Second player sent", message)
+    finally:
+        connected.remove(websocket)
+
 async def handler(websocket):
     async for message in websocket:
         event = json.loads(message)
         assert event["type"] == "init"
-        await start(websocket)
+        if ("join" in event):
+            await join(websocket, event["join"])
+        else:
+            await start(websocket)
 
 async def main():
     server = await serve(handler, "", 8001) # Starts a websocket server

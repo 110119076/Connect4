@@ -115,3 +115,11 @@ To join the game, the second player sends a different "init" event
 The connection handler for the second player can look up the game with the join key as shown above.
 
 Define a function to send an initialization event when the WebSocket connection is established, which triggers an open event
+
+Update the initialization sequence to account for the second player.
+
+Update the handler coroutine to look for the join key in the "init" message, then load that game
+
+The server logs say first player started game ... and second player joined game .... The numbers match, proving that the game local variable in both connection handlers points to same object in the memory of the Python process.
+
+In the initialization sequence, you’re routing connections to start() or join() depending on the first message received by the server.
