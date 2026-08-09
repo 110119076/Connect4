@@ -4,6 +4,7 @@ import secrets
 import asyncio
 
 from websockets.asyncio.server import serve
+from websockets.asyncio.connection import broadcast
 
 import json
 
@@ -62,16 +63,23 @@ async def play(websocket, game, player, connected):
                 "column": column,
                 "row": row,
             }
-            for connection in connected:
-                await connection.send(json.dumps(event))
+            
+            # for connection in connected:
+            #     await connection.send(json.dumps(event))
+
+            broadcast(connected, json.dumps(event))
             
             if (game.winner is not None):
                 event = {
                     "type": "win",
                     "player": game.winner
                 }
-                for connection in connected:
-                    await connection.send(json.dumps(event))
+                
+                # for connection in connected:
+                #     await connection.send(json.dumps(event))
+
+                broadcast(connected, json.dumps(event))
+
         except Exception as ex:
             await error(websocket, str(ex))
             continue

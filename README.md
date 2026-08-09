@@ -123,3 +123,35 @@ Update the handler coroutine to look for the join key in the "init" message, the
 The server logs say first player started game ... and second player joined game .... The numbers match, proving that the game local variable in both connection handlers points to same object in the memory of the Python process.
 
 In the initialization sequence, you’re routing connections to start() or join() depending on the first message received by the server.
+
+### Broadcast
+
+When you need to send a message to the two players you’re using this pattern:
+
+for connection in connected:
+
+        await connection.send(json.dumps(event))
+
+Since this is a very common pattern in WebSocket servers, websockets provides the broadcast() helper for this purpose:
+
+broadcast(connected, json.dumps(event))
+
+Calling broadcast() once is more efficient than calling send() in a loop.
+
+Did you notice that there’s no await in the broadcast version? Indeed, broadcast() is a function, not a coroutine like send() or recv().
+
+It’s quite obvious why recv() is a coroutine. When you want to receive the next message, you have to wait until the client sends it and the network transmits it.
+
+It’s less obvious why send() is a coroutine. If you send many messages or large messages, you could write data faster than the network can transmit it or the client can read it.
+
+Then, outgoing data will pile up in buffers, which will consume memory and may crash your application.
+
+To avoid this problem, send() waits until the write buffer drains.
+
+By slowing down the application as necessary, this ensures that the server doesn’t send data too quickly. This is called backpressure and it’s useful for building robust systems.
+
+That said, when you’re sending the same messages to many clients in a loop, applying backpressure in this way can become counterproductive.
+
+When you’re broadcasting, you don’t want to slow down everyone to the pace of the slowest clients; you want to drop clients that cannot keep up with the data stream.
+
+That’s why broadcast() doesn’t wait until write buffers drain and therefore doesn’t need to be a coroutine.
