@@ -155,3 +155,26 @@ That said, when you’re sending the same messages to many clients in a loop, ap
 When you’re broadcasting, you don’t want to slow down everyone to the pace of the slowest clients; you want to drop clients that cannot keep up with the data stream.
 
 That’s why broadcast() doesn’t wait until write buffers drain and therefore doesn’t need to be a coroutine.
+
+### Spectators/Watch
+
+Allow spectators to watch the game.
+
+The process for inviting a spectator can be the same as for inviting the second player. You will have to duplicate all the initialization logic
+
+Once the initialization sequence is done, watching a game is as simple as registering the WebSocket connection in the connected set in order to receive game events and doing nothing until the spectator disconnects. You can wait for a connection to terminate with wait_closed()
+
+async def watch(websocket, watch_key):
+
+    ...
+
+    connected.add(websocket)
+
+    try:
+
+        await websocket.wait_closed()
+
+    finally:
+
+        connected.remove(websocket)
+

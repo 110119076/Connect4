@@ -12,6 +12,11 @@ window.addEventListener("DOMContentLoaded", () => {
 });
 
 function sendMoves(board, websocket) {
+  // Don't send moves for a spectator watching a game.
+  const params = new URLSearchParams(window.location.search);
+  if (params.has("watch")) {
+    return;
+  }
   // When clicking a column, send a "play" event for a move in that column.
   board.addEventListener("click", ({ target }) => {
     const column = target.dataset.column;
@@ -38,6 +43,7 @@ function receiveMoves(board, websocket) {
       case "init":
         // Create link for inviting the second player.
         document.querySelector(".join").href = "?join=" + event.join;
+        document.querySelector(".watch").href = "?watch=" + event.watch;
         break;
       case "play":
         // Update the UI with the move.
@@ -63,8 +69,11 @@ function initGame(websocket) {
     let event = {type: "init"};
     const urlParams = new URLSearchParams(window.location.search);
     const joinKey = urlParams.get("join");
+    const watchKey = urlParams.get("watch");
     if (joinKey) {
       event.join = joinKey;
+    } if (watchKey) {
+      event.watch = watchKey;
     }
     websocket.send(JSON.stringify(event));
   })
