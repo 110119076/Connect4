@@ -67,8 +67,7 @@ async def start(websocket):
         event = {"type": "init", "join": join_key}
         await websocket.send(json.dumps(event))
         print("First player started game", id(game))
-        async for message in websocket:
-            print("First player sent", message)
+        await play(websocket, game, PLAYER1, connected)
     finally:
         del JOIN[join_key]
 
@@ -88,19 +87,47 @@ async def join(websocket, join_key):
     connected.add(websocket)
     try:
         print("Second player joined game", id(game))
-        async for message in websocket:
-            print("Second player sent", message)
+        await play(websocket, game, PLAYER2, connected)
     finally:
         connected.remove(websocket)
 
-async def handler(websocket):
+async def play(websocket, game, player, connected):
     async for message in websocket:
         event = json.loads(message)
-        assert event["type"] == "init"
-        if ("join" in event):
-            await join(websocket, event["join"])
-        else:
-            await start(websocket)
+        print(event)
+        assert event["type"] == "play"
+        column = event["column"]
+        try:
+            row = game.play(player, column)
+            event = {
+                "type": "play",
+                "player": player,
+                "column": column,
+                "row": row,
+            }
+            for connection in connected:
+                await connection.send(json.dumps(event))
+            
+            if (game.winner is not None):
+                event = {
+                    "type": "win",
+                    "player": game.winner
+                }
+                for connection in connected:
+                    await connection.send(json.dumps(event))
+        except Exception as ex:
+            await error(websocket, str(ex))
+            continue
+        
+
+async def handler(websocket):
+    message = await websocket.recv()
+    event = json.loads(message)
+    assert event["type"] == "init"
+    if ("join" in event):
+        await join(websocket, event["join"])
+    else:
+        await start(websocket)
 
 async def main():
     server = await serve(handler, "", 8001) # Starts a websocket server
