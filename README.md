@@ -178,3 +178,4 @@ async def watch(websocket, watch_key):
 
         connected.remove(websocket)
 
+As a further improvement, you may support adding spectators while a game is already in progress. This requires replaying moves that were played before the spectator was added to the connected set. Past moves are available in the moves attribute of the game.

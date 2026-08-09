@@ -42,9 +42,26 @@ async def watch(websocket, watch_key):
         return
     connected.add(websocket)
     try:
+        # Send previous moves, in case the game already started.
+        await replay(websocket, game)
+        # Keep the connection open, but don't receive any messages.
         await websocket.wait_closed()
     finally:
         connected.remove(websocket)
+
+async def replay(websocket, game):
+    # Make a copy to avoid an exception if game.moves changes while iteration
+    # is in progress. If a move is played while replay is running, moves will
+    # be sent out of order but each move will be sent once and eventually the
+    # UI will be consistent.
+    for player, column, row in game.moves.copy():
+        event = {
+            "type": "play",
+            "player": player,
+            "column": column,
+            "row": row
+        }
+        await websocket.send(json.dumps(event))
 
 async def error(websocket, message):
     event = {
