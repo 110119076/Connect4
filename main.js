@@ -6,7 +6,7 @@ window.addEventListener("DOMContentLoaded", () => {
   createBoard(board);
   // Open the WebSocket connection and register event handlers.
   const isLocal = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
-  const backendUrl = isLocal ? "ws://localhost:8001/" : "wss://connect4-backend-xxx.onrender.com";
+  const backendUrl = isLocal ? "ws://localhost:8001/" : "wss://connect4-backend-ht31.onrender.com";
   const websocket = new WebSocket(backendUrl);
   initGame(websocket);
   receiveMoves(board, websocket);
