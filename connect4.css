@@ -27,6 +27,11 @@
   --btn-secondary-bg: #ffffff;
   --btn-secondary-text: #334155;
   --btn-border: #cbd5e1;
+
+  /* Sizing variables for responsiveness */
+  --cell-size: 60px;
+  --cell-margin: 0.3rem;
+  --board-padding: 0.75rem;
 }
 
 body {
@@ -124,7 +129,7 @@ h1 {
   box-shadow: var(--board-shadow);
   display: flex;
   flex-direction: row;
-  padding: 0.75rem;
+  padding: var(--board-padding);
 }
 
 /* Columns */
@@ -144,9 +149,9 @@ h1 {
 /* Connect 4 Cells */
 .cell {
   border-radius: 50%;
-  width: 60px;
-  height: 60px;
-  margin: 0.3rem;
+  width: var(--cell-size);
+  height: var(--cell-size);
+  margin: var(--cell-margin);
   box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.35);
   transition: 
     background-color 0.2s ease, 
@@ -183,4 +188,40 @@ h1 {
     inset 0 2px 4px rgba(255, 255, 255, 0.35),
     0 4px 8px rgba(0, 0, 0, 0.25);
   transform: scale(1.02);
+}
+
+/* Responsive Design for Mobile Devices (Pixel, iPhone, etc.) */
+@media (max-width: 640px) {
+  :root {
+    --cell-size: 42px;
+    --cell-margin: 0.2rem;
+    --board-padding: 0.5rem;
+  }
+  h1 {
+    font-size: 1.75rem;
+  }
+  .subtitle {
+    margin-bottom: 1.5rem;
+    font-size: 0.85rem;
+  }
+  .actions {
+    margin-bottom: 1.5rem;
+    gap: 0.5rem;
+  }
+  .action {
+    min-width: 120px;
+    padding: 0.5rem 1rem;
+    font-size: 0.8rem;
+  }
+}
+
+@media (max-width: 390px) {
+  :root {
+    --cell-size: 34px;
+    --cell-margin: 0.15rem;
+    --board-padding: 0.4rem;
+  }
+  h1 {
+    font-size: 1.5rem;
+  }
 }
