@@ -1,105 +1,182 @@
-/* General layout */
+/* Typography & Professional Color System */
+:root {
+  --font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  
+  /* Solid Light Screen Background */
+  --bg-light: #f1f5f9;
+  --text-primary: #0f172a;
+  --text-secondary: #64748b;
+  
+  /* Slate-Grey Board Design (Not baby blue) */
+  --board-bg: #334155; 
+  --board-border: #1e293b;
+  --board-shadow: 
+    0 20px 25px -5px rgba(15, 23, 42, 0.15), 
+    0 8px 10px -6px rgba(15, 23, 42, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  
+  /* Token Holes */
+  --token-empty: #f1f5f9; /* Same as screen background for cutout hole effect */
+  --token-empty-hover: #e2e8f0; /* Hover slot highlight */
+  --color-crimson: #e11d48; /* Red player token */
+  --color-amber: #f59e0b;   /* Yellow/Amber player token */
+  
+  /* Buttons */
+  --btn-primary-bg: #0f172a;
+  --btn-primary-text: #ffffff;
+  --btn-secondary-bg: #ffffff;
+  --btn-secondary-text: #334155;
+  --btn-border: #cbd5e1;
+}
 
 body {
-  background-color: white;
+  background-color: var(--bg-light);
+  color: var(--text-primary);
   display: flex;
-  flex-direction: column-reverse;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   margin: 0;
   min-height: 100vh;
+  font-family: var(--font-family);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-/* Action buttons */
+/* Header & Typography */
+h1 {
+  font-size: 2.25rem;
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  margin: 0 0 0.25rem 0;
+  color: var(--text-primary);
+  text-align: center;
+}
 
+.subtitle {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  margin-bottom: 2rem;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
+
+/* Buttons Container */
 .actions {
   display: flex;
   flex-direction: row;
-  justify-content: space-evenly;
-  align-items: flex-end;
-  width: 720px;
-  height: 100px;
+  justify-content: center;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 2.5rem;
 }
 
 .action {
-  color: darkgray;
-  font-family: "Helvetica Neue", sans-serif;
-  font-size: 20px;
-  line-height: 20px;
-  font-weight: 300;
-  text-align: center;
+  font-family: var(--font-family);
+  font-size: 0.875rem;
+  font-weight: 600;
   text-decoration: none;
-  text-transform: uppercase;
-  padding: 20px;
-  width: 120px;
+  padding: 0.625rem 1.25rem;
+  min-width: 110px;
+  border-radius: 0.5rem;
+  transition: all 0.15s ease-in-out;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
 }
 
-.action:hover {
-  background-color: darkgray;
-  color: white;
-  font-weight: 700;
+.action.join {
+  background-color: var(--btn-primary-bg);
+  color: var(--btn-primary-text);
+  border: 1px solid var(--btn-primary-bg);
+}
+
+.action.join:hover {
+  background-color: #1e293b;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.15);
+}
+
+.action.watch {
+  background-color: var(--btn-secondary-bg);
+  color: var(--btn-secondary-text);
+  border: 1px solid var(--btn-border);
+}
+
+.action.watch:hover {
+  background-color: #f8fafc;
+  border-color: #94a3b8;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.05);
 }
 
 .action[href=""] {
   display: none;
 }
 
-/* Connect Four board */
-
+/* The Board (Professional Charcoal Slate design) */
 .board {
-  background-color: blue;
+  background-color: var(--board-bg);
+  border: 4px solid var(--board-border);
+  border-radius: 1.25rem;
+  box-shadow: var(--board-shadow);
   display: flex;
   flex-direction: row;
-  padding: 0 10px;
-  position: relative;
+  padding: 0.75rem;
 }
 
-.board::before,
-.board::after {
-  background-color: blue;
-  content: "";
-  height: auto;
-  width: 20px;
-  position: absolute;
-}
-
-.board::before {
-  left: -20px;
-}
-
-.board::after {
-  right: -20px;
-}
-
+/* Columns */
 .column {
   display: flex;
   flex-direction: column-reverse;
-  padding: 10px;
+  padding: 0.125rem;
+  cursor: pointer;
+  border-radius: 0.5rem;
+  transition: background-color 0.15s ease;
 }
 
+.column:hover {
+  background-color: rgba(255, 255, 255, 0.12);
+}
+
+/* Connect 4 Cells */
 .cell {
   border-radius: 50%;
-  width: 80px;
-  height: 80px;
-  margin: 10px 0;
+  width: 60px;
+  height: 60px;
+  margin: 0.3rem;
+  box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.35);
+  transition: 
+    background-color 0.2s ease, 
+    transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 .empty {
-  background-color: white;
+  background-color: var(--token-empty);
+  border: 1px solid rgba(0, 0, 0, 0.1);
 }
 
 .column:hover .empty {
-  background-color: lightgray;
+  background-color: var(--token-empty-hover);
 }
 
 .column:hover .empty ~ .empty {
-  background-color: white;
+  background-color: var(--token-empty);
 }
 
+/* Placed Tokens */
 .red {
-  background-color: red;
+  background-color: var(--color-crimson);
+  box-shadow: 
+    inset 0 -4px 0 rgba(0, 0, 0, 0.25), 
+    inset 0 2px 4px rgba(255, 255, 255, 0.35),
+    0 4px 8px rgba(0, 0, 0, 0.25);
+  transform: scale(1.02);
 }
 
 .yellow {
-  background-color: yellow;
+  background-color: var(--color-amber);
+  box-shadow: 
+    inset 0 -4px 0 rgba(0, 0, 0, 0.25), 
+    inset 0 2px 4px rgba(255, 255, 255, 0.35),
+    0 4px 8px rgba(0, 0, 0, 0.25);
+  transform: scale(1.02);
 }
