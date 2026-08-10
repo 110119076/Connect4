@@ -2,6 +2,7 @@
 
 import secrets
 import asyncio
+import os
 
 from websockets.asyncio.server import serve
 from websockets.asyncio.connection import broadcast
@@ -131,7 +132,8 @@ async def handler(websocket):
         await start(websocket)
 
 async def main():
-    server = await serve(handler, "", 8001) # Starts a websocket server
+    port = int(os.environ.get("PORT", 8001))
+    server = await serve(handler, "", port) # Starts a websocket server
     await server.serve_forever()
 
 
