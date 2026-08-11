@@ -80,6 +80,7 @@ async def join(websocket, join_key):
     connected.add(websocket)
     try:
         print("Second player joined game", id(game))
+        await replay(websocket, game)
         await play(websocket, game, PLAYER2, connected)
     finally:
         connected.remove(websocket)
